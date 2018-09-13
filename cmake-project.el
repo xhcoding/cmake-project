@@ -1,4 +1,5 @@
 ;;; cmake-project --- Create and build c/c++ project with cmake
+
 ;; Filename: cmake-project.el
 ;; Description: Create and build c/c++ project with cmake
 ;; Author: Yong Cheng <xhcoding@163.com>
@@ -6,7 +7,7 @@
 ;; Created: 2018-08-07 08:16:00
 ;; Version: 0.1
 ;; Last-Update:
-;; URL:
+;; URL: https://github.com/xhcoding/cmake-project
 ;; Keywords: cmake
 ;; Compatibility: GNU Emacs 26.1
 
@@ -31,7 +32,7 @@
 
 ;;; Commentary:
 
-;;; Reuqire
+;;; Require
 
 (require 'cl)
 (require 'dired)
