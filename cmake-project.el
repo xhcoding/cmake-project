@@ -1,4 +1,4 @@
-;;; cmake-project --- Create and build c/c++ project with cmake
+;;; cmake-project.el --- Create and build c/c++ project with cmake
 
 ;; Filename: cmake-project.el
 ;; Description: Create and build c/c++ project with cmake
