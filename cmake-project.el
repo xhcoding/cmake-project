@@ -33,9 +33,10 @@
 ;;; Commentary:
 
 ;;; Require
-
-(require 'cl)
 (require 'dired)
+(require 'eshell)
+(require 'cl)
+
 ;;; Code:
 ;;
 
@@ -57,15 +58,14 @@
   :group 'cmake-project
   :type 'string)
 
-(defcustom cp-cmake-build-type "Debug"
-  "Specifies the build type on single-configuration generators."
-  :group 'cmake-project
-  :type 'string
-  :options '("Debug" "Release" "RelWithDebInfo" "MinSizeRel"))
-
 
 (defcustom cp-project-build-directory "build"
   "A path relative project root path, which CMake project default build."
+  :group 'cmake-project
+  :type 'string)
+
+(defcustom cp-project-binary-directory "bin"
+  "A path relative build directory saved binary files."
   :group 'cmake-project
   :type 'string)
 
@@ -88,7 +88,7 @@ PATH may be a file or directory and directory paths end with a slash."
 
 
 (defun cp-project-root(dir)
-  "Identify a project root in DIR by recurring top-down search for files in `cp-project-root-files'"
+  "Identify a project root in DIR by recurring top-down search for files in `cp-project-root-files'."
   (if (and cp-project-root-cache (string-match (regexp-quote cp-project-root-cache) dir))
       cp-project-root-cache
     (setq cp-project-root-cache
@@ -104,23 +104,22 @@ PATH may be a file or directory and directory paths end with a slash."
 
 ;;;TODO: Improve
 (defun cp-project-gen-default-template()
-  "Generate a default `CMakeLists.txt' template"
-  (save-excursion
-    (concat
-     (format "cmake_minimum_required(VERSION %s)" cp-cmake-minimum-version)
-     (format "\nset(PROJECT_NAME \"%s\")" (file-name-nondirectory (directory-file-name cp-project-root-cache)))
-     (format "\nproject(${PROJECT_NAME})")
-     (format "\nset(CMAKE_EXPORT_COMPILE_COMMANDS ON)")
-     )))
+  "Generate a default `CMakeLists.txt' template."
+  (concat
+   (format "cmake_minimum_required(VERSION %s)" cp-cmake-minimum-version)
+   (format "\nset(PROJECT_NAME \"%s\")" (file-name-nondirectory (directory-file-name cp-project-root-cache)))
+   (format "\nproject(${PROJECT_NAME})")
+   (format "\nset(CMAKE_EXPORT_COMPILE_COMMANDS ON)")
+   ))
 
-;;;TODO: add cp-after-create-new-project-hook
 (defun cp-project-create-new-project(dir)
   "Create a new project in DIR.
-TEMPLATE is a CMakeLists.txt template. IF it is `nil', use `cp-project-gen-default-template'
+TEMPLATE is a CMakeLists.txt template. IF it is nil,
+use `cp-project-gen-default-template'
 instead.TEMPLATE can also be a function without argument and returning a string."
   (interactive "DDirectory: ")
   (setq cp-project-root-cache dir)
-  (dired-create-directory cp-project-root-cache)
+  (dired-create-directory (expand-file-name cp-project-build-directory cp-project-root-cache))
   (condition-case nil
       (progn
         (let ((file (expand-file-name "CMakeLists.txt"  cp-project-root-cache)))
@@ -158,9 +157,12 @@ instead.TEMPLATE can also be a function without argument and returning a string.
 
 ;;TODO: imporve run project
 (defun cp-project-run(file &optional args)
+  "Run FILE with ARGS in eshell."
   (interactive
    (list
-    (let ((default-directory (or cp-project-root-cache default-directory)))
+    (let ((default-directory (or
+                              (expand-file-name cp-project-binary-directory cp-project-build-directory)
+                              default-directory)))
       (car (find-file-read-args "File: " t)))
     (read-from-minibuffer "Args: ")))
   (with-current-buffer (or (get-buffer eshell-buffer-name) (eshell))
@@ -171,6 +173,7 @@ instead.TEMPLATE can also be a function without argument and returning a string.
 
 
 (defun cp-project-refresh()
+  "Refresh project."
   (interactive)
   (condition-case nil
       (cp-project-root default-directory)
