@@ -74,11 +74,15 @@
   :group 'cmake-project
   :type 'function)
 
+(defcustom cp-after-new-project-hook nil
+  "Hook after create new project."
+  :group 'cmake-project
+  :type 'hook)
+
 ;;; Variable
 
 (defvar cp-project-root-cache nil
   "Cached value of function `cp-project-root'.")
-
 
 ;;; Functions
 
@@ -135,7 +139,8 @@ instead.TEMPLATE can also be a function without argument and returning a string.
         (let ((file (expand-file-name "CMakeLists.txt"  cp-project-root-cache)))
           (with-temp-file  file
             (insert (funcall cp-project-template-function)))
-          (find-file file)))
+          (find-file file)
+          (run-hook-with-args 'cp-after-new-project-hook)))
     (error
      (dired-delete-file cp-project-root-cache 'always)
      (setq cp-project-root-cache nil)
