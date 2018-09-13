@@ -81,6 +81,16 @@
 
 
 ;;; Functions
+
+(defun cp--absolute-build-dir()
+  "Absolute build directory."
+  (expand-file-name cp-project-build-directory cp-project-root-cache))
+
+
+(defun cp--absolute-binary-dir()
+  "Absolute binary directory."
+  (expand-file-name cp-project-binary-directory (cp--absolute-build-dir)))
+
 (defun cp-parent(path)
   "Return the parent directory of PATH.
 PATH may be a file or directory and directory paths end with a slash."
@@ -119,7 +129,7 @@ use `cp-project-gen-default-template'
 instead.TEMPLATE can also be a function without argument and returning a string."
   (interactive "DDirectory: ")
   (setq cp-project-root-cache dir)
-  (dired-create-directory (expand-file-name cp-project-build-directory cp-project-root-cache))
+  (dired-create-directory (cp--absolute-build-dir))
   (condition-case nil
       (progn
         (let ((file (expand-file-name "CMakeLists.txt"  cp-project-root-cache)))
@@ -161,7 +171,7 @@ instead.TEMPLATE can also be a function without argument and returning a string.
   (interactive
    (list
     (let ((default-directory (or
-                              (expand-file-name cp-project-binary-directory cp-project-build-directory)
+                              (cp--absolute-binary-dir)
                               default-directory)))
       (car (find-file-read-args "File: " t)))
     (read-from-minibuffer "Args: ")))
