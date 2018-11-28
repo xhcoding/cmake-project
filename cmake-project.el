@@ -126,7 +126,7 @@ PATH may be a file or directory and directory paths end with a slash."
    (format "\nset(CMAKE_EXPORT_COMPILE_COMMANDS ON)")
    ))
 
-(defun cp-project-create-new-project(dir)
+(defun cp-project-new(dir)
   "Create a new project in DIR.
 TEMPLATE is a CMakeLists.txt template. IF it is nil,
 use `cp-project-gen-default-template'
@@ -146,7 +146,7 @@ instead.TEMPLATE can also be a function without argument and returning a string.
      (setq cp-project-root-cache nil)
      (message "Create project failed!"))))
 
-(defun cp-project-gen-project()
+(defun cp-project-gen()
   "Generate project."
   (interactive)
   (let ((default-directory cp-project-root-cache)
@@ -155,13 +155,13 @@ instead.TEMPLATE can also be a function without argument and returning a string.
           (format "cmake -B%s -H." cp-project-build-directory))
     (call-interactively 'compile)))
 
-(defun cp-project-cleanup-gen()
+(defun cp-project-cleanup()
   "Clean up build directory."
   (interactive)
   (when (yes-or-no-p (format "Delete %s?" cp-project-build-directory))
     (dired-delete-file cp-project-build-directory 'always)))
 
-(defun cp-project-build-project()
+(defun cp-project-build()
   "Build project."
   (interactive)
   (let ((compile-command)
