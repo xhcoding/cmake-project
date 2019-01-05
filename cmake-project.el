@@ -186,6 +186,15 @@ instead.TEMPLATE can also be a function without argument and returning a string.
     (insert (format "%s %s" file args))
     (eshell-send-input)))
 
+(defun cp-project-debug(file)
+  "Return the path of the FILE to be debugged."
+  (interactive
+   (list
+    (let ((default-directory (or
+                              (cp--absolute-binary-dir)
+                              default-directory)))
+      (car (find-file-read-args "File: " t)))))
+  file)
 
 (defun cp-project-refresh()
   "Refresh project."
