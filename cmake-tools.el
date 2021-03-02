@@ -1,13 +1,13 @@
-;;; cmake-project.el --- Create and build c/c++ project with cmake
+;;; cmake-tools.el --- Create and build c/c++ project with cmake
 
-;; Filename: cmake-project.el
+;; Filename: cmake-tools.el
 ;; Description: Create and build c/c++ project with cmake
-;; Author: Yong Cheng <xhcoding@163.com>
-;; Copyright (C) 2018, Yong Cheng, all right reserved
+;; Author: xhcoding <xhcoding@163.com>
+;; Copyright (C) 2018, xhcoding, all right reserved
 ;; Created: 2018-08-07 08:16:00
 ;; Version: 0.1
-;; Last-Update:
-;; URL: https://github.com/xhcoding/cmake-project
+;; Last-Update: 2020-03-02 15:08:00
+;; URL: https://github.com/xhcoding/cmake-tools
 ;; Keywords: cmake
 ;; Compatibility: GNU Emacs 26.1
 
@@ -41,7 +41,7 @@
 ;;
 
 ;;; Custom
-(defgroup cmake-project nil
+(defgroup cmake-tools nil
   "Manage c/c++ project with cmake."
   :group 'applications
   :prefix "cp-")
@@ -50,33 +50,33 @@
   '("CMakeLists.txt"    ;Cmake project file
     )
   "A list of files considered to mark the root of a cmake project."
-  :group 'cmake-project
+  :group 'cmake-tools
   :type '(repeat string))
 
 (defcustom cp-cmake-minimum-version "3.7"
   "Required Cmake minimum version."
-  :group 'cmake-project
+  :group 'cmake-tools
   :type 'string)
 
 
 (defcustom cp-project-build-directory "build"
   "A path relative project root path, which CMake project default build."
-  :group 'cmake-project
+  :group 'cmake-tools
   :type 'string)
 
 (defcustom cp-project-binary-directory "bin"
   "A path relative build directory saved binary files."
-  :group 'cmake-project
+  :group 'cmake-tools
   :type 'string)
 
 (defcustom cp-project-template-function 'cp-project-gen-default-template
   "A function generated `CMakeLists.txt' template."
-  :group 'cmake-project
+  :group 'cmake-tools
   :type 'function)
 
 (defcustom cp-after-new-project-hook nil
   "Hook after create new project."
-  :group 'cmake-project
+  :group 'cmake-tools
   :type 'hook)
 
 ;;; Variable
@@ -203,7 +203,7 @@ instead.TEMPLATE can also be a function without argument and returning a string.
       (cp-project-root default-directory)
     (error (message "project refresh failed"))))
 
-(provide 'cmake-project)
+(provide 'cmake-tools)
 
 
-;;; cmake-project.el ends here
+;;; cmake-tools.el ends here
